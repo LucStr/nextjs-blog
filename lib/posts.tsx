@@ -6,7 +6,14 @@ import html from 'remark-html';
 
 const postsDirectory = path.join(process.cwd(), 'posts');
 
-export async function getPostData(id) {
+export class PostData {
+  id: string;
+  title: string;
+  date: string;
+  contentHtml: string;
+}
+
+export async function getPostData(id): Promise<PostData> {
     const fullPath = path.join(postsDirectory, `${id}.md`);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
   
@@ -23,7 +30,8 @@ export async function getPostData(id) {
     return {
       id,
       contentHtml,
-      ...matterResult.data,
+      title: matterResult.data.title,
+      date: matterResult.data.date
     };
   }
 
@@ -44,7 +52,8 @@ export function getSortedPostsData() {
     // Combine the data with the id
     return {
       id,
-      ...matterResult.data,
+      title: matterResult.data.title,
+      date: matterResult.data.date
     };
   });
   // Sort posts by date
